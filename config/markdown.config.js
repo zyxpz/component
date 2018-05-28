@@ -12,6 +12,10 @@ const webpack = require('webpack');
 
 const webpackDevServer = require('webpack-dev-server');
 
+const webpackDevMiddleware = require('webpack-dev-middleware');
+
+const app = require('express')();
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const atoolDocUtil = require('atool-doc-util');
@@ -57,17 +61,23 @@ commonConfig.plugins.push(
   })
 )
 
-const compiler = webpack(commonConfig)
+const compiler = webpack(commonConfig);
 
-const server = new webpackDevServer(compiler, {
-  historyApiFallback: true,
-  hot: true,
-  inline: true,
-  stats: 'errors-only',
-  quiet: true
-}).listen('8080', 'localhost', () => {
+app.use(webpackDevMiddleware(compiler, {
+
+})).listen(8080, () => {
   console.log(chalk.cyan('Starting the development server...\n'));
 })
+
+// const server = new webpackDevServer(compiler, {
+//   historyApiFallback: true,
+//   hot: true,
+//   inline: true,
+//   stats: 'errors-only',
+//   quiet: true
+// }).listen('8080', 'localhost', () => {
+//   console.log(chalk.cyan('Starting the development server...\n'));
+// })
 
 function geDomFiles(dir, name) {
   return glob.sync(path.join(`${dir}/${name}`, `**/*.{js,jsx,html,md}`))
