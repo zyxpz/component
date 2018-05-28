@@ -1,0 +1,137 @@
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+
+const path = require('path');
+
+const APP_CWD = process.cwd();
+
+const {
+	entry,
+} = require('../package.json');
+
+const ENV_IS_DEV = process.env.NODE_ENV === 'development';
+
+const config = {
+	entry: Object.assign({}, entry),
+	output: {
+		path: path.resolve(APP_CWD, 'dist'),
+		filename: '[name].js',
+		chunkFilename: '[name].js',
+	},
+	resolve: {
+		mainFiles: ['index'],
+		modules: [path.resolve(APP_CWD, 'src'), 'node_modules'],
+		extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.less'],
+		alias: {},
+	},
+	module: {
+		rules: [{
+				test: /\.jsx?$/,
+				exclude: [
+					/**
+					 * 在node_modules的文件不被babel理会
+					 */
+					path.resolve(APP_CWD, 'node_modules'),
+				],
+				use: [{
+					loader: 'babel-loader',
+					options: {
+						cacheDirectory: true, // 启用编译缓存
+					},
+				}],
+			},
+			{
+				test: /\.less$/,
+				use: [
+					'style',
+					'css',
+					{
+						loader: 'less-loader',
+						options: {
+							javascriptEnabled: true,
+						},
+					},
+				],
+
+			},
+			{
+				test: /\.(png|jpg|gif|eot|ttf|woff|woff2|svg)$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+				},
+			},
+			{
+				test: /\.html$/i,
+				use: 'html-loader',
+			},
+			{
+				test: /\.md$/,
+				loader: 'html-loader!markdown-loader',
+				include: path.join(APP_CWD, 'examples')
+			}
+		],
+	},
+	optimization: {
+		// 默认关闭压缩
+		minimize: ENV_IS_DEV ? false : JSON.parse(process.env.MINI_JS),
+		// 原：NamedModulesPlugin()
+		namedModules: true,
+		// 原：NoEmitOnErrorsPlugin() - 异常继续执行
+		noEmitOnErrors: true,
+		// 原：ModuleConcatenationPlugin() - 模块串联 - dev模式下回影响antd（比如：Pagination, 和语言有关）
+		concatenateModules: !ENV_IS_DEV,
+	},
+	plugins: [
+		
+	],
+};
+
+const defaultConfig = {
+	/**
+	 * cheap-module-eval-source-map 原始源码（仅限行)
+	 * none 生产环境 打包后的代码
+	 */
+	devtool: ENV_IS_DEV ? 'cheap-module-eval-source-map' : 'none',
+	resolve: {
+		/**
+		 * 自动解析确定的扩展。
+		 */
+		extensions: ['.js', '.jsx', '.ts', '.tsx'],
+	},
+	// devServer: {
+	// host: myip,
+	// port: port || 8989,
+	// inline: true,
+	// stats: 'errors-only',
+	// historyApiFallback: true, // 当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html
+	// watchOptions: {
+	// aggregateTimeout: 300, // 重新构建前增加延迟
+	// poll: 1000, // 轮询
+	// ignored: /node_modules/ // 无视
+	// }
+	// },
+	/**
+	 * node
+	 */
+	node: {
+		global: true,
+		crypto: 'empty',
+		__dirname: true,
+		__filename: true,
+		Buffer: true,
+		clearImmediate: false,
+		setImmediate: false,
+	},
+	/**
+	 * 启用编译缓存
+	 */
+	cache: true,
+};
+
+module.exports = {
+	commonConfig: webpackMerge(
+		config,
+		defaultConfig,
+	),
+};
