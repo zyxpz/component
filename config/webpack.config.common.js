@@ -5,6 +5,8 @@ const path = require('path');
 
 const APP_CWD = process.cwd();
 
+const tpl = `${APP_CWD}/templates/element.ejs`;
+
 const {
 	entry,
 } = require('../package.json');
@@ -26,59 +28,60 @@ const config = {
 	},
 	module: {
 		rules: [{
-				test: /\.jsx?$/,
-				exclude: [
-					/**
-					 * 在node_modules的文件不被babel理会
-					 */
-					path.resolve(APP_CWD, 'node_modules'),
-				],
-				use: [{
-					loader: 'babel-loader',
-					options: {
-						cacheDirectory: true, // 启用编译缓存
-					},
-				}],
-			},
-			{
-				test: /\.less$/,
-				use: [
-					'style',
-					'css',
-					{
-						loader: 'less-loader',
-						options: {
-							javascriptEnabled: true,
-						},
-					},
-				],
-
-			},
-			{
-				test: /\.(png|jpg|gif|eot|ttf|woff|woff2|svg)$/,
-				loader: 'url-loader',
+			test: /\.jsx?$/,
+			exclude: [
+				/**
+				 * 在node_modules的文件不被babel理会
+				 */
+				path.resolve(APP_CWD, 'node_modules'),
+			],
+			use: [{
+				loader: 'babel-loader',
 				options: {
-					limit: 10000,
+					cacheDirectory: true, // 启用编译缓存
 				},
+			}],
+		},
+		{
+			test: /\.less$/,
+			use: [
+				'style',
+				'css',
+				{
+					loader: 'less-loader',
+					options: {
+						javascriptEnabled: true,
+					},
+				},
+			],
+
+		},
+		{
+			test: /\.(png|jpg|gif|eot|ttf|woff|woff2|svg)$/,
+			loader: 'url-loader',
+			options: {
+				limit: 10000,
 			},
-			{
-				test: /\.html$/i,
-				use: 'html-loader',
-			},
-			{
-				test: /\.md$/,
-				use: [
-					'html-loader',
-					'markdown-loader',
-					{
-						loader: require.resolve('../loaders/markdown.js'),
-						options: {
-							test: '1'
-						}
+		},
+		{
+			test: /\.html$/i,
+			use: 'html-loader',
+		},
+		{
+			test: /\.md$/,
+			use: [
+				'html-loader',
+				'markdown-loader',
+				{
+					loader: `${path.join(__dirname, './loaders/markdown-loader').replace(/\/config/, '')}?template=${tpl}`,
+					options: {
+						test: '1',
+						template: tpl
 					}
-				],
-				include: path.join(APP_CWD, 'examples')
-			}
+				}
+			],
+			include: path.join(APP_CWD, 'examples')
+		}
 		],
 	},
 	optimization: {
@@ -92,7 +95,7 @@ const config = {
 		concatenateModules: !ENV_IS_DEV,
 	},
 	plugins: [
-		
+
 	],
 };
 

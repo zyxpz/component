@@ -16,14 +16,18 @@ const util = require('atool-doc-util');
 module.exports = function (content) {
 
   this.cacheable && this.cacheable(); // 开启缓存
-  
+
   const options = this.options;
 
   const webpackOptions = loaderUtils.getOptions(this); // 获取webpack设置options
 
+  // const query = loaderUtils.parseQuery(this.resourceQuery); // 拼接参数
+
   const resourcePath = this.resourcePath; // md路径
 
   // const resource = new util.Resource(options.cwd, options.demoSource, resourcePath);
+
+  const tpl = webpackOptions.template; // 模板
 
   const fileContentTree = MT(content).content;
 
@@ -32,7 +36,7 @@ module.exports = function (content) {
   const style = getChildren(fileContentTree.find(isStyle));
 
   const html = getChildren(fileContentTree.find(isHtml));
-  
+
   return code;
 };
 
