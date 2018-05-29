@@ -12,15 +12,21 @@ const webpack = require('webpack');
 
 const webpackDevServer = require('webpack-dev-server');
 
-const webpackDevMiddleware = require('webpack-dev-middleware');
+// const webpackDevMiddleware = require('webpack-dev-middleware');
 
-const app = require('express')();
+// const express = require('express');
+
+// const app = express();
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const atoolDocUtil = require('atool-doc-util');
 
-const chalk = require('chalk');
+const chalk = require('chalk'); // console
+
+const chokidar = require('chokidar'); // 监控
+
+const createHtml = require('./markdown.html.config');
 
 const {
   commonConfig
@@ -52,32 +58,78 @@ commonConfig.plugins.push(
   new HtmlWebpackPlugin({
     filename: 'index.html',
     template: `${APP_CWD}/templates/index.ejs`,
-    inject: 'body',
+    inject: 'false',
     chunks: [],
     title: `${name}@${version}`,
     link,
     homePage,
     readme: atoolDocUtil.marked(fs.readFileSync(`${APP_CWD}/README.md`, 'utf-8'))
-  })
+  }),
+  ...createHtml({htmlPath: entry, path: APP_CWD})
 )
 
 const compiler = webpack(commonConfig);
 
-app.use(webpackDevMiddleware(compiler, {
+// const DIST_DIR = `${APP_CWD}/dist`;
 
-})).listen(8080, () => {
-  console.log(chalk.cyan('Starting the development server...\n'));
-})
+// app.use(webpackDevMiddleware(compiler, {
+//   /**
+//    * publicPath属性是必需的，而所有其他选项是可选的
+//    */
+//   publicPath: '/',
+//   /**
+//    * default: info
+//    * type: string
+//    * 定义模块将记录的消息级别。 有效的级别包括
+//    * trace
+//    * debug
+//    * info
+//    * warn
+//    * error
+//    * silent
+//    */
+//   // logLevel: 'silent',
+//   /**
+//    * default: undefined
+//    * type: string
+//    * 此属性允许用户在每个请求上传递自定义HTTP标头。 例如。 { "X-Custom-Header": "yes" }
+//    */
+//   headers: {
+//     "X-Custom-Header": "yes"
+//   },
+//   /**
+//    * Web服务器的索引路径，默认为“index.html”。
+//    */
+//   index: 'index.html',
+//   /**
+//    * Type: Boolean
+//    * Default: undefined
+//    * 模块以“懒惰”模式运行，这意味着它在文件更改时不会重新编译，而是在每个请求上重新编译。
+//    */
+//   lazy: true
+// }))
 
-// const server = new webpackDevServer(compiler, {
-//   historyApiFallback: true,
-//   hot: true,
-//   inline: true,
-//   stats: 'errors-only',
-//   quiet: true
-// }).listen('8080', 'localhost', () => {
+// app.use(express.static(DIST_DIR));
+
+// const router = express.Router();
+
+// router.get('/', (req, res, next) => {
+//   res.render('index', { message: 'Hey there!'});
+// })
+
+// app.listen(8080, () => {
 //   console.log(chalk.cyan('Starting the development server...\n'));
 // })
+
+const server = new webpackDevServer(compiler, {
+  historyApiFallback: true,
+  hot: true,
+  inline: true,
+  stats: 'errors-only',
+  // quiet: true
+}).listen('8080', 'localhost', () => {
+  console.log(chalk.cyan('Starting the development server...\n'));
+})
 
 function geDomFiles(dir, name) {
   return glob.sync(path.join(`${dir}/${name}`, `**/*.{js,jsx,html,md}`))

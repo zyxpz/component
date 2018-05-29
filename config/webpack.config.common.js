@@ -67,7 +67,16 @@ const config = {
 			},
 			{
 				test: /\.md$/,
-				loader: 'html-loader!markdown-loader',
+				use: [
+					'html-loader',
+					'markdown-loader',
+					{
+						loader: require.resolve('../loaders/markdown.js'),
+						options: {
+							test: '1'
+						}
+					}
+				],
 				include: path.join(APP_CWD, 'examples')
 			}
 		],

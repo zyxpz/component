@@ -1,3 +1,3 @@
-const component = require('./lib/main');
+const component = require('./lib/index');
 
 module.exports = component;
