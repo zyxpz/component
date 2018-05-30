@@ -28,7 +28,7 @@ const config = {
 	},
 	module: {
 		rules: [{
-			test: /\.(js|jsx|md)?$/,
+			test: /\.(js|jsx)?$/,
 			exclude: [
 				/**
 				 * 在node_modules的文件不被babel理会

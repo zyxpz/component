@@ -18,7 +18,9 @@
   "author": "MidnightBlues",
   "license": "ISC",
   "dependencies": {
-    "atpl-loader": "^0.2.0"
+    "atpl-loader": "^0.2.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
   },
   "devDependencies": {
     "atool-doc-util": "^0.1.1",
