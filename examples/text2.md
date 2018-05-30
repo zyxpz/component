@@ -24,8 +24,9 @@
 ```
 
 ```js
-import { testDemoOne } from '../lib/index.js';
-testDemoOne();
+import { testDemoTow } from '../lib/index.js';
+
+document.querySelector('.rootApp').innerHTML = testDemoTow();
 ```
 
 ## API

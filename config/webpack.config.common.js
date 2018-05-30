@@ -28,7 +28,7 @@ const config = {
 	},
 	module: {
 		rules: [{
-			test: /\.jsx?$/,
+			test: /\.(js|jsx|md)?$/,
 			exclude: [
 				/**
 				 * 在node_modules的文件不被babel理会
@@ -45,8 +45,8 @@ const config = {
 		{
 			test: /\.less$/,
 			use: [
-				'style',
-				'css',
+				'style-loader',
+				'css-loader',
 				{
 					loader: 'less-loader',
 					options: {
@@ -65,19 +65,23 @@ const config = {
 		},
 		{
 			test: /\.html$/i,
-			use: 'html-loader',
+			loader: 'html-loader',
+		},
+		{
+			test: /\.atpl$/,
+			loader: 'atpl-loader',
 		},
 		{
 			test: /\.md$/,
 			use: [
-				'html-loader',
-				'markdown-loader',
+				'babel-loader',
 				{
-					loader: `${path.join(__dirname, './loaders/markdown-loader').replace(/\/config/, '')}?template=${tpl}`,
-					options: {
-						test: '1',
-						template: tpl
-					}
+					loader: `${path.join(__dirname, './loaders/markdown-loader').replace(/\/config/, '')}?template=${tpl}&domSource=examples`
+					// options: {
+					// 	test: '1',
+					// 	template: tpl,
+					// 	domSource: 'examples'
+					// }
 				}
 			],
 			include: path.join(APP_CWD, 'examples')
@@ -134,6 +138,7 @@ const defaultConfig = {
 		Buffer: true,
 		clearImmediate: false,
 		setImmediate: false,
+		fs: 'empty'
 	},
 	/**
 	 * 启用编译缓存

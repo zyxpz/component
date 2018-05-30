@@ -65,7 +65,6 @@ commonConfig.plugins.push(
     homePage,
     readme: atoolDocUtil.marked(fs.readFileSync(`${APP_CWD}/README.md`, 'utf-8'))
   }),
-  ...createHtml({htmlPath: entry, path: APP_CWD})
 )
 
 const compiler = webpack(commonConfig);

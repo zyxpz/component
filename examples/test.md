@@ -18,14 +18,16 @@
   <meta content="telephone=no,email=no" name="format-detection"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <body>
-<div class="rootApp"></div>
+<div class="rootApp">123</div>
 </body>
 </html>
 ```
 
 ```js
-import { testDemoOne } from '../lib/index.js';
-testDemoOne();
+import { testDemoOne } from 'index.js';
+
+document.querySelector('.rootApp').innerHTML = testDemoOne();
+
 ```
 
 ## API

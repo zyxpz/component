@@ -11,7 +11,6 @@ module.exports = function (params) {
   for (const k in htmlPath) {
     arr.push(new HtmlWebpackPlugin({
       filename: `${k}.html`,
-      template: `${path}/templates/element.html`,
       inject: false,
     }))
   }

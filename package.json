@@ -6,6 +6,7 @@
   "homePage": "http://",
   "entry": {},
   "scripts": {
+    "start": "npm run compile && npm run doc",
     "doc": "node config/markdown.config.js",
     "compile": "rm -rf ./lib && babel src --out-dir lib --copy-files",
     "lint": "esw ./config/*.config.* ./src/**/*.js --fix --watch &",
@@ -14,9 +15,11 @@
     "prod": "npm run remove && webpack --config ./config/webpack.prod.config.js --color --progress"
   },
   "keywords": [],
-  "author": "",
+  "author": "MidnightBlues",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "atpl-loader": "^0.2.0"
+  },
   "devDependencies": {
     "atool-doc-util": "^0.1.1",
     "babel-cli": "^6.26.0",
